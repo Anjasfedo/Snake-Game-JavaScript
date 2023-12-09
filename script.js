@@ -1,14 +1,14 @@
 // HTML Element
-const board = document.getElementById("board-game");
+const board = document.getElementById("game-board");
 const instructionText = document.getElementById("instruction-text");
 const logo = document.getElementById("logo");
 const score = document.getElementById("score");
 const highScoreText = document.getElementById("highScore");
 
 // Game Variabels
+const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
 let food = generateFood();
-const GRIDSIZE = 20;
 let direction = "right";
 let gameInterval;
 let gameSpeedDelay = 200;
@@ -16,47 +16,47 @@ let gameStarted = false;
 let highScore = 0;
 
 // Function
-const draw = () => {
+function draw() {
   board.innerHTML = "";
   drawSnake();
   drawFood();
   updateScore();
 };
 
-const drawSnake = () => {
+function drawSnake() {
   snake.forEach((segment) => {
-    const snakeElement = createElement("div", "snake");
+    const snakeElement = createGameElement("div", "snake");
     setPosition(snakeElement, segment);
     board.appendChild(snakeElement);
   });
 };
 
-const createGameElement = (tag, className) => {
-  const element = createElement(tag);
+function createGameElement(tag, className) {
+  const element = document.createElement(tag);
   element.className = className;
   return element;
 };
 
-const setPosition = (element, position) => {
+function setPosition(element, position) {
   element.style.gridColumn = position.x;
   element.style.gridRow = position.y;
 };
 
-const drawFood = () => {
+function drawFood() {
   if (gameStarted) {
-    const foodElement = createElement("div", "food");
+    const foodElement = createGameElement("div", "food");
     setPosition(foodElement, food);
     board.appendChild(foodElement);
   }
 };
 
-const generateFood = () => {
-    const x = Math.floor(Math.random() * GRIDSIZE) + 1;
-    const y = Math.floor(Math.random() * GRIDSIZE) + 1;
-    return { x, y };
-  };
+function generateFood() {
+  const x = Math.floor(Math.random() * gridSize) + 1;
+  const y = Math.floor(Math.random() * gridSize) + 1;
+  return { x, y };
+};
 
-const move = () => {
+function move() {
   const head = { ...snake[0] };
   switch (direction) {
     case "right":
@@ -89,7 +89,7 @@ const move = () => {
   }
 };
 
-const startGame = () => {
+function startGame() {
   gameStarted = true;
   instructionText.style.display = "none";
   logo.style.display = "none";
@@ -100,11 +100,8 @@ const startGame = () => {
   }, gameSpeedDelay);
 };
 
-const handleKeyPress = (event) => {
-  if (
-    (!gameStarted && event.code === "Space") ||
-    (!gameStarted && event.code === " ")
-  ) {
+document.addEventListener("keydown", (event) => {
+  if (!gameStarted && (event.code === "Space" || event.key === " ")) {
     startGame();
   } else {
     switch (event.key) {
@@ -122,11 +119,9 @@ const handleKeyPress = (event) => {
         break;
     }
   }
-};
+});
 
-document.addEventListener("keydown", handleKeyPress);
-
-const increaseSpeed = () => {
+function increaseSpeed(){
   if (gameSpeedDelay > 150) {
     gameSpeedDelay -= 5;
   } else if (gameSpeedDelay > 100) {
@@ -138,10 +133,10 @@ const increaseSpeed = () => {
   }
 };
 
-const checkCollision = () => {
+function checkCollision(){
   const head = snake[0];
 
-  if (head.x < 1 || head.x > GRIDSIZE || head.y < 1 || head.y > GRIDSIZE) {
+  if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
     resetGame();
   }
 
@@ -152,33 +147,34 @@ const checkCollision = () => {
   }
 };
 
-const resetGame = () => {
+function resetGame(){
   updateHighScore();
   stopGame();
   snake = [{ x: 10, y: 10 }];
   food = generateFood();
   direction = "right";
   gameSpeedDelay = 200;
+  updateScore();
 };
 
-const updateScore = () => {
+function updateScore(){
   const currentScore = snake.length - 1;
   score.textContent = currentScore.toString().padStart(3, "0");
 };
 
-const stopGame = () => {
+function stopGame(){
   clearInterval(gameInterval);
   gameStarted = false;
   instructionText.style.display = "block";
   logo.style.display = "block";
 };
 
-const updateHighScore = () => {
+function updateHighScore(){
   const currentScore = snake.length - 1;
   if (currentScore > highScore) {
     highScore = currentScore;
     highScoreText.textContent = highScore.toString().padStart(3, "0");
   }
 
-  highScore.style.display = "block";
+  highScoreText.style.display = "block";
 };
