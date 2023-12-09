@@ -8,6 +8,13 @@ const highScoreText = document.getElementById("highScore");
 // Game Variabels
 const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
+
+const generateFood = () => {
+  const x = Math.floor(Math.random() * gridSize) + 1;
+  const y = Math.floor(Math.random() * gridSize) + 1;
+  return { x, y };
+};
+
 let food = generateFood();
 let direction = "right";
 let gameInterval;
@@ -16,33 +23,35 @@ let gameStarted = false;
 let highScore = 0;
 
 // Function
-function draw() {
+const draw = () => {
   board.innerHTML = "";
   drawSnake();
   drawFood();
   updateScore();
 };
 
-function drawSnake() {
-  snake.forEach((segment) => {
-    const snakeElement = createGameElement("div", "snake");
-    setPosition(snakeElement, segment);
-    board.appendChild(snakeElement);
-  });
+const drawSnake = () => {
+  if (gameStarted) {
+    snake.forEach((segment) => {
+      const snakeElement = createGameElement("div", "snake");
+      setPosition(snakeElement, segment);
+      board.appendChild(snakeElement);
+    });
+  }
 };
 
-function createGameElement(tag, className) {
+const createGameElement = (tag, className) => {
   const element = document.createElement(tag);
   element.className = className;
   return element;
 };
 
-function setPosition(element, position) {
+const setPosition = (element, position) => {
   element.style.gridColumn = position.x;
   element.style.gridRow = position.y;
 };
 
-function drawFood() {
+const drawFood = () => {
   if (gameStarted) {
     const foodElement = createGameElement("div", "food");
     setPosition(foodElement, food);
@@ -50,13 +59,9 @@ function drawFood() {
   }
 };
 
-function generateFood() {
-  const x = Math.floor(Math.random() * gridSize) + 1;
-  const y = Math.floor(Math.random() * gridSize) + 1;
-  return { x, y };
-};
+//
 
-function move() {
+const move = () => {
   const head = { ...snake[0] };
   switch (direction) {
     case "right":
@@ -89,7 +94,7 @@ function move() {
   }
 };
 
-function startGame() {
+const startGame = () => {
   gameStarted = true;
   instructionText.style.display = "none";
   logo.style.display = "none";
@@ -121,7 +126,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function increaseSpeed(){
+const increaseSpeed = () => {
   if (gameSpeedDelay > 150) {
     gameSpeedDelay -= 5;
   } else if (gameSpeedDelay > 100) {
@@ -133,21 +138,21 @@ function increaseSpeed(){
   }
 };
 
-function checkCollision(){
+const checkCollision = () => {
   const head = snake[0];
 
   if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
     resetGame();
   }
 
-  for (let i = 0; i < snake.length - 1; i++) {
+  for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       resetGame();
     }
   }
 };
 
-function resetGame(){
+const resetGame = () => {
   updateHighScore();
   stopGame();
   snake = [{ x: 10, y: 10 }];
@@ -157,19 +162,19 @@ function resetGame(){
   updateScore();
 };
 
-function updateScore(){
+const updateScore = () => {
   const currentScore = snake.length - 1;
   score.textContent = currentScore.toString().padStart(3, "0");
 };
 
-function stopGame(){
+const stopGame = () => {
   clearInterval(gameInterval);
   gameStarted = false;
   instructionText.style.display = "block";
   logo.style.display = "block";
 };
 
-function updateHighScore(){
+const updateHighScore = () => {
   const currentScore = snake.length - 1;
   if (currentScore > highScore) {
     highScore = currentScore;
