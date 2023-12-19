@@ -83,7 +83,7 @@ const move = () => {
   if (head.x === food.x && head.y === food.y) {
     food = generateFood();
     increaseSpeed();
-    clearInterval(gameSpeedDelay);
+    clearInterval(gameInterval);
     gameInterval = setInterval(() => {
       move();
       checkCollision();
