@@ -21,6 +21,8 @@
 17. the src will like snake-game-ai-gen.png
 18. for next develop we need to comment the h1 and img tag below
 19. so our code will like this: <!DOCTYPE html>
+
+```
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -48,6 +50,7 @@
 </div>
 </body>
 </html>
+```
 
 ## Styling with CSS
 
@@ -68,7 +71,9 @@
 15. next target #snake, with border some gray 1px dotted
 16. now target .food with backgroudn color with white, and border gray 5px solid
 17. we need to add id of logo on img tag, then target it #logo then add position of absolute
-18. so we will get this following css: body {
+18. so we will get this following css: 
+```
+body {
 display: flex;
 align-items: center;
 justify-content: center;
@@ -157,6 +162,7 @@ border: #999 5px solid;
 #logo {
 position: absolute;
 }
+```
 
 ## Creating the snake game logic with JavaScript
 

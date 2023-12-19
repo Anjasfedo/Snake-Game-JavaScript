@@ -1,14 +1,15 @@
-// HTML Element
+// HTML Elements
 const board = document.getElementById("game-board");
 const instructionText = document.getElementById("instruction-text");
 const logo = document.getElementById("logo");
 const score = document.getElementById("score");
 const highScoreText = document.getElementById("highScore");
 
-// Game Variabels
+// Game Variables
 const gridSize = 20;
 let snake = [{ x: 10, y: 10 }];
 
+// Function to generate random food coordinates within the grid
 const generateFood = () => {
   const x = Math.floor(Math.random() * gridSize) + 1;
   const y = Math.floor(Math.random() * gridSize) + 1;
@@ -22,7 +23,7 @@ let gameSpeedDelay = 200;
 let gameStarted = false;
 let highScore = 0;
 
-// Function
+// Function to update the game board
 const draw = () => {
   board.innerHTML = "";
   drawSnake();
@@ -30,6 +31,7 @@ const draw = () => {
   updateScore();
 };
 
+// Function to draw the snake on the game board
 const drawSnake = () => {
   if (gameStarted) {
     snake.forEach((segment) => {
@@ -40,17 +42,20 @@ const drawSnake = () => {
   }
 };
 
+// Function to create a game element (div) with a specified class
 const createGameElement = (tag, className) => {
   const element = document.createElement(tag);
   element.className = className;
   return element;
 };
 
+// Function to set the position of a game element on the grid
 const setPosition = (element, position) => {
   element.style.gridColumn = position.x;
   element.style.gridRow = position.y;
 };
 
+// Function to draw the food on the game board
 const drawFood = () => {
   if (gameStarted) {
     const foodElement = createGameElement("div", "food");
@@ -59,8 +64,7 @@ const drawFood = () => {
   }
 };
 
-//
-
+// Function to handle snake movement and collision detection
 const move = () => {
   const head = { ...snake[0] };
   switch (direction) {
@@ -80,10 +84,11 @@ const move = () => {
 
   snake.unshift(head);
 
+  // Check if the snake has eaten the food
   if (head.x === food.x && head.y === food.y) {
     food = generateFood();
     increaseSpeed();
-    clearInterval(gameInterval);
+    clearInterval(gameInterval); // Clear the previous interval
     gameInterval = setInterval(() => {
       move();
       checkCollision();
@@ -94,6 +99,7 @@ const move = () => {
   }
 };
 
+// Function to start the game
 const startGame = () => {
   gameStarted = true;
   instructionText.style.display = "none";
@@ -105,10 +111,12 @@ const startGame = () => {
   }, gameSpeedDelay);
 };
 
+// Event listener for keyboard input
 document.addEventListener("keydown", (event) => {
   if (!gameStarted && (event.code === "Space" || event.key === " ")) {
     startGame();
   } else {
+    // Change direction based on arrow key input
     switch (event.key) {
       case "ArrowRight":
         direction = "right";
@@ -126,6 +134,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
+// Function to increase the game speed
 const increaseSpeed = () => {
   if (gameSpeedDelay > 150) {
     gameSpeedDelay -= 5;
@@ -138,13 +147,16 @@ const increaseSpeed = () => {
   }
 };
 
+// Function to check for collisions (e.g., wall or snake collision)
 const checkCollision = () => {
   const head = snake[0];
 
+  // Check if the snake has hit the walls
   if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
     resetGame();
   }
 
+  // Check if the snake has collided with itself
   for (let i = 1; i < snake.length; i++) {
     if (head.x === snake[i].x && head.y === snake[i].y) {
       resetGame();
@@ -152,6 +164,7 @@ const checkCollision = () => {
   }
 };
 
+// Function to reset the game state
 const resetGame = () => {
   updateHighScore();
   stopGame();
@@ -162,11 +175,13 @@ const resetGame = () => {
   updateScore();
 };
 
+// Function to update the displayed score
 const updateScore = () => {
   const currentScore = snake.length - 1;
   score.textContent = currentScore.toString().padStart(3, "0");
 };
 
+// Function to stop the game
 const stopGame = () => {
   clearInterval(gameInterval);
   gameStarted = false;
@@ -174,6 +189,7 @@ const stopGame = () => {
   logo.style.display = "block";
 };
 
+// Function to update and display the high score
 const updateHighScore = () => {
   const currentScore = snake.length - 1;
   if (currentScore > highScore) {
